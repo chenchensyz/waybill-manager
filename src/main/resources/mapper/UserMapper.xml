@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.waybill.dao.UserMapper">
+  <resultMap id="BaseResultMap" type="cn.com.waybill.model.User">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="role_id" jdbcType="INTEGER" property="roleId" />
+    <result column="expire" jdbcType="BIGINT" property="expire" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="telephone" property="telephone" />
+    <result column="remark" property="remark" />
+    <result column="role_name" property="roleName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_name, password, nick_name, state, role_id, expire, create_time, update_time,telephone,remark
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="getUserByUserName" parameterType="string" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from user
+    where user_name = #{userName}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insertUser" parameterType="cn.com.waybill.model.User">
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="nickName != null">
+        nick_name,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="roleId != null">
+        role_id,
+      </if>
+      <if test="expire != null">
+        expire,
+      </if>
+      <if test="telephone != null">
+        telephone,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+        create_time,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null">
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="roleId != null">
+        #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="expire != null">
+        #{expire,jdbcType=BIGINT},
+      </if>
+      <if test="telephone != null">
+        #{telephone},
+      </if>
+      <if test="remark != null">
+        #{remark},
+      </if>
+       sysdate()
+    </trim>
+  </insert>
+
+  <update id="updateUser" parameterType="cn.com.waybill.model.User">
+    update user
+    <set>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null">
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="roleId != null">
+        role_id = #{roleId,jdbcType=INTEGER},
+      </if>
+        expire = #{expire},
+      <if test="telephone != null">
+        telephone =#{telephone},
+      </if>
+      <if test="remark != null">
+        remark =#{remark},
+      </if>
+        update_time = sysdate(),
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <sql id="sql_where">
+    <where>
+      <if test="userName != null and userName !=''">
+         and u.user_name = #{userName,jdbcType=VARCHAR}
+      </if>
+      <if test="nickName != null and nickName !=''">
+        <bind name="nickNameSec" value="'%' + nickName + '%'" />
+         and u.nick_name  LIKE  #{nickNameSec}
+      </if>
+      <if test="state != null">
+         and u.state = #{state,jdbcType=INTEGER}
+      </if>
+      <if test="roleId != null">
+         and u.role_id = #{roleId,jdbcType=INTEGER}
+      </if>
+      <if test="expire != null">
+         and u.expire = #{expire,jdbcType=BIGINT}
+      </if>
+    </where>
+  </sql>
+  <select id="getUserList" parameterType="cn.com.waybill.model.User" resultMap="BaseResultMap">
+     select u.* ,r.role_name from user u left join role r on u.role_id = r.id
+    <include refid="sql_where" />
+    order by u.id desc
+  </select>
+</mapper>
