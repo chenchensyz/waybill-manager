@@ -34,9 +34,9 @@ public class CustomerApiServiceImpl implements CustomerApiService {
 
     @Override
     public RestResponse login(RestResponse rest, String telephone, String jsCode) {
-        String url = messageCodeUtil.getMessage(CodeUtil.WX_CODE2SESSION);
-        String appid = messageCodeUtil.getMessage(CodeUtil.WX_APPID);
-        String secret = messageCodeUtil.getMessage(CodeUtil.WX_SECRET);
+        String url = messageCodeUtil.getMessage(CodeUtil.WX_PREFIX + CodeUtil.WX_CODE2SESSION);
+        String appid = messageCodeUtil.getMessage(CodeUtil.WX_PREFIX + CodeUtil.WX_APPID);
+        String secret = messageCodeUtil.getMessage(CodeUtil.WX_PREFIX + CodeUtil.WX_SECRET);
         url = url.replace(CodeUtil.WX_APPID, appid);
         url = url.replace(CodeUtil.WX_SECRET, secret);
         url = url.replace(CodeUtil.WX_JSCODE, jsCode);
@@ -47,7 +47,7 @@ public class CustomerApiServiceImpl implements CustomerApiService {
                 throw new ValueRuntimeException(MessageCode.WX_CONNECT_ERR);
             }
             codeModel = JSONObject.parseObject(resultMap.get("result").toString(), WxCodeModel.class);
-            if (codeModel != null && codeModel.getErrcode() != 0) {  //微信验证失败
+            if (codeModel != null && codeModel.getErrcode() != null) {  //微信验证失败
                 rest.setMessage(codeModel.getErrmsg());
                 throw new ValueRuntimeException(MessageCode.WX_VALID_ERR);
             }

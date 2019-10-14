@@ -52,8 +52,15 @@ public class CodeUtil {
     public static final String FILE_ROOT_PATH = "file_root_path";
 
     //微信
+    public static final String WX_PREFIX = "wx.";
     public static final String WX_CODE2SESSION = "code2Session";
     public static final String WX_APPID = "APPID";
     public static final String WX_SECRET = "SECRET";
     public static final String WX_JSCODE = "JSCODE";
+
+    //快递
+    public static final String KD_PREFIX = "kd.";
+    public static final String KD_ReqURL = "ReqURL";
+    public static final String KD_EBusinessID = "EBusinessID";
+    public static final String KD_AppKey= "AppKey";
 }

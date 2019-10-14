@@ -12,12 +12,13 @@
     <result column="state" jdbcType="INTEGER" property="state" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="shipper_code"  property="shipperCode" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, user_name, order_num, customer, telephone, detail, creator, state, create_time, 
+    id, user_name, order_num, customer, telephone, detail, creator, state, shipper_code, create_time,
     update_time
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="getOrderById" parameterType="int" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from order_info
@@ -50,6 +51,9 @@
       <if test="creator != null">
         creator,
       </if>
+      <if test="shipperCode != null">
+        shipper_code,
+      </if>
         state, create_time,
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -74,9 +78,13 @@
       <if test="creator != null">
         #{creator,jdbcType=INTEGER},
       </if>
+      <if test="shipperCode != null">
+        #{shipperCode},
+      </if>
         1, sysdate()
     </trim>
   </insert>
+
   <update id="updateOrder" parameterType="cn.com.waybill.model.OrderInfo">
     update order_info
     <set>
@@ -98,9 +106,10 @@
       <if test="state != null">
         state = #{state,jdbcType=INTEGER},
       </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      <if test="shipperCode != null">
+        shipper_code = #{shipperCode,jdbcType=INTEGER},
       </if>
+        update_time = sysdate(),
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>

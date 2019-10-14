@@ -83,4 +83,13 @@ public class OrderInfoServiceImpl implements OrderInfoService {
             throw new ValueRuntimeException(MessageCode.ORDER_ERR_SAVE);
         }
     }
+
+    @Override
+    public OrderInfo getOrderInfo(Integer id) {
+        OrderInfo orderInfo = orderInfoMapper.getOrderInfo(id);
+        if (orderInfo == null) {
+
+        }
+        return null;
+    }
 }

@@ -16,4 +16,6 @@ public interface OrderInfoService {
 
     void updateOrderState(List<Integer> ids);
 
+    OrderInfo getOrderInfo(Integer id);
+
 }

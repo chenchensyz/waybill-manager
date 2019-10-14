@@ -19,4 +19,6 @@ public interface OrderInfoMapper {
     int updateOrderState(List<Integer> ids);
 
     int insertOrderMore(List<OrderInfo> orderInfos);
+
+    OrderInfo getOrderInfo(Integer id);
 }

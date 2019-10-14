@@ -29,6 +29,8 @@ public class OrderInfo extends BaseEntity {
 
     private Long updateLongTime;
 
+    private String shipperCode;
+
     public Integer getId() {
         return id;
     }
@@ -123,5 +125,13 @@ public class OrderInfo extends BaseEntity {
 
     public void setUpdateLongTime(Long updateLongTime) {
         this.updateLongTime = updateLongTime;
+    }
+
+    public String getShipperCode() {
+        return shipperCode;
+    }
+
+    public void setShipperCode(String shipperCode) {
+        this.shipperCode = shipperCode;
     }
 }
