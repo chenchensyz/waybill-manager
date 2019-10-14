@@ -5,7 +5,11 @@ import cn.com.waybill.model.Role;
 
 import java.util.List;
 
-public interface RoleMapper{
+public interface RoleMapper {
 
     List<Role> getRoleList(Role role);
+
+    int insertRole(Role role);
+
+    int updateRole(Role role);
 }

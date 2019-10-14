@@ -30,6 +30,9 @@ public class CodeUtil {
     public static final String METHOD_POST = "POST";
     public static final String METHOD_GET = "GET";
     public static final String METHOD_DELETE = "DELETE";
+    public static final String HTTP_RESULT_CODE = "code";
+    public static final String HTTP_RESULT_NAME = "result";
+
 
     public static final String PASSWORD_SUFFIX = "*chuanqi";  //密码后缀
     public static final String TOKEN_SUFFIX = "*jsonwebtoken";  //token后缀
@@ -63,4 +66,8 @@ public class CodeUtil {
     public static final String KD_ReqURL = "ReqURL";
     public static final String KD_EBusinessID = "EBusinessID";
     public static final String KD_AppKey= "AppKey";
+    public static final String KD_CODE_SELECT= "1002";
+    public static final String KD_CODE_SHIPPER= "2002";
+
+
 }

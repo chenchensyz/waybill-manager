@@ -58,14 +58,15 @@ public class OrderApiController {
         return rest;
     }
 
-    //订单列表
+    //订单详情
     @RequestMapping(value = "info")
     public RestResponse getOrderInfo(Integer id) {
         RestResponse rest = new RestResponse();
         int msgCode = MessageCode.BASE_SUCC_CODE;
         try {
-            OrderInfo orderInfos = orderInfoService.getOrderInfo(id);
-            Object orderInfosFilter = FilterParamUtil.filterParam(orderInfos, FilterParamUtil.API_ORDER_LIST);
+            OrderInfo orderInfo = orderInfoService.getOrderInfo(id);
+            Object orderInfoFilter = FilterParamUtil.filterParam(orderInfo, FilterParamUtil.API_ORDER_LIST);
+            rest.setData(orderInfoFilter);
         } catch (ValueRuntimeException e) {
             msgCode = (int) e.getValue();
         }

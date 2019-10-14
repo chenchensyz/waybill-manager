@@ -22,8 +22,8 @@ public class MyInteceptor implements WebMvcConfigurer {
         registry.addInterceptor(new WebInterceptor())
                 .addPathPatterns("/**").excludePathPatterns(webExcludeArr);
         String apiExcludePath = env.getProperty("interceptor.apiExcludePath");
-        registry.addInterceptor(new ApiInterceptor())
-                .addPathPatterns("/api/**").excludePathPatterns(apiExcludePath);
+//        registry.addInterceptor(new ApiInterceptor())
+//                .addPathPatterns("/api/**").excludePathPatterns(apiExcludePath);
     }
 
     @Override

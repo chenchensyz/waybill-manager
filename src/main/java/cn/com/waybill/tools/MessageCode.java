@@ -32,8 +32,8 @@ public class MessageCode {
     public static final int APPINFO_ERR_MESSAGEBODY = 10110;   // 消息内容不能为空
     public static final int APPINFO_SERVER_ERR_USERS_NULL = 10111; // 用户不能为空
 
-    //证书
-    public static final int CERT_ERR_SAVE = 11101; //保存证书失败
+    //快递
+    public static final int CERT_ERR_SAVE = 11101; //快递公司失败
     public static final int CERT_ERR_DELETE = 11102; //删除证书失败
     public static final int CERT_NULL = 11103; //证书不存在
     public static final int CERT_FILE_ERR_DEL = 11104; //删除证书文件失败
@@ -68,8 +68,7 @@ public class MessageCode {
     public static final int USERINFO_ERR_QUERY_PAGE = 20113; //请填写完整的分页信息
 
     //角色
-    public static final int ROLE_ERR_ADD = 21101; //角色增加失败
-    public static final int ROLE_ERR_UPDATE = 21102; //角色修改失败
+    public static final int ROLE_ERR_SAVE = 21101; //角色保存失败
     public static final int ROLE_PERM_ERR_ADD = 21103; //角色权限增加失败
     public static final int ROLE_PERM_ERR_DEL = 21104; //角色权限重置失败
     public static final int ROLE_EXIT_CODE = 21105; //角色编码已存在

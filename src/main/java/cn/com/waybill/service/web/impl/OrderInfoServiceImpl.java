@@ -3,12 +3,17 @@ package cn.com.waybill.service.web.impl;
 import cn.com.waybill.dao.OrderInfoMapper;
 import cn.com.waybill.model.OrderInfo;
 import cn.com.waybill.model.User;
+import cn.com.waybill.model.common.KdTypeModel;
 import cn.com.waybill.service.web.OrderInfoService;
+import cn.com.waybill.tools.CodeUtil;
 import cn.com.waybill.tools.MessageCode;
 import cn.com.waybill.tools.excel.ExcelUtil;
 import cn.com.waybill.tools.excel.OrderExcel;
 import cn.com.waybill.tools.exception.ValueRuntimeException;
+import cn.com.waybill.tools.kdApi.KdUtils;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,10 +91,34 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 
     @Override
     public OrderInfo getOrderInfo(Integer id) {
-        OrderInfo orderInfo = orderInfoMapper.getOrderInfo(id);
+        OrderInfo orderInfo = orderInfoMapper.getOrderById(id);
         if (orderInfo == null) {
-
+            throw new ValueRuntimeException(MessageCode.ORDER_ERR_SELECT);
         }
-        return null;
+        KdUtils api = new KdUtils();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("LogisticCode", orderInfo.getOrderNum());
+        try {
+            if (StringUtils.isBlank(orderInfo.getShipperCode())) {
+                String shipper = api.getResultPost(jsonObject.toJSONString(), CodeUtil.KD_CODE_SHIPPER);
+                KdTypeModel typeModel = JSONObject.parseObject(shipper, KdTypeModel.class);
+                if (typeModel.getSuccess()) {
+                    orderInfo.setShipperCode(typeModel.getShippers().get(0).getShipperCode());
+                    orderInfoMapper.updateOrder(orderInfo);
+                }
+            }
+            if (StringUtils.isNotBlank(orderInfo.getShipperCode())) {
+                jsonObject.put("ShipperCode", orderInfo.getShipperCode());
+                //物流信息
+                String result = api.getResultPost(jsonObject.toJSONString(), CodeUtil.KD_CODE_SELECT);
+                JSONObject jsonObject1 = JSONObject.parseObject(result);
+                orderInfo.setTraces(jsonObject1.get("Traces"));
+            }
+        } catch (ValueRuntimeException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return orderInfo;
     }
 }

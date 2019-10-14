@@ -36,6 +36,54 @@ public class HttpConnection {
         return uuidStr;
     }
 
+    public static Map<String, Object> requestNewParams(String requestUrl, String method, String contentType, Map<String, String> params, Map<String, String> serviceHeader) throws UnsupportedEncodingException {
+        String newParam = "";
+        if (params != null && !params.isEmpty()) {
+            Map<String, Object> dataParams = Maps.newHashMap();
+            boolean getFlag = true;
+            if (requestUrl.contains("{")) { //拼在地址栏
+                for (String key : params.keySet()) {
+                    Object value = params.get(key);
+                    if (!requestUrl.contains("{" + key + "}")) {
+                        dataParams.put(key, value);
+                    }
+                    String replace = requestUrl.replace("{" + key + "}", value.toString());
+                    requestUrl = replace;
+                    getFlag = false;
+                }
+            }
+            if (CodeUtil.METHOD_POST.equals(method)) {
+                if (CodeUtil.CONTEXT_JSON.equals(contentType)) {  //json格式
+                    newParam = JSONObject.toJSONString(params);
+                } else {
+                    StringBuilder param = new StringBuilder();
+                    for (Map.Entry<String, String> entry : params.entrySet()) {
+                        if (param.length() > 0) {
+                            param.append("&");
+                        }
+                        param.append(entry.getKey());
+                        param.append("=");
+                        param.append(entry.getValue());
+                    }
+                    newParam = param.toString();
+                }
+            } else if (CodeUtil.METHOD_GET.equals(method) && getFlag) {//地址栏未变化
+                requestUrl = requestUrl + "?";
+                int i = 1;
+                for (String key : params.keySet()) {
+                    String value = params.get(key).toString();
+                    requestUrl += key + "=" + URLEncoder.encode(value, "UTF-8");
+                    if (i < params.size()) {
+                        requestUrl += "&";
+                    }
+                    i++;
+                }
+            }
+        }
+        Map<String, Object> resultMap = httpRequest(requestUrl, method, contentType, newParam, serviceHeader);
+        return resultMap;
+    }
+
     public static Map<String, Object> httpRequest(String requestUrl, String method, String contentType, String outputStr, Map<String, String> serviceHeader) {
         Map<String, Object> map = Maps.newHashMap();
         String result = null;

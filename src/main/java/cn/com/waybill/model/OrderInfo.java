@@ -3,6 +3,8 @@ package cn.com.waybill.model;
 import cn.com.waybill.model.common.BaseEntity;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class OrderInfo extends BaseEntity {
     private Integer id;
@@ -30,6 +32,8 @@ public class OrderInfo extends BaseEntity {
     private Long updateLongTime;
 
     private String shipperCode;
+
+    private Object Traces;
 
     public Integer getId() {
         return id;
@@ -133,5 +137,13 @@ public class OrderInfo extends BaseEntity {
 
     public void setShipperCode(String shipperCode) {
         this.shipperCode = shipperCode;
+    }
+
+    public Object getTraces() {
+        return Traces;
+    }
+
+    public void setTraces(Object traces) {
+        Traces = traces;
     }
 }

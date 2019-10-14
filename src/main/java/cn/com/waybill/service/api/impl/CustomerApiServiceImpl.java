@@ -42,11 +42,11 @@ public class CustomerApiServiceImpl implements CustomerApiService {
         url = url.replace(CodeUtil.WX_JSCODE, jsCode);
         WxCodeModel codeModel = null;
         Map<String, Object> resultMap = HttpConnection.httpsRequest(url, CodeUtil.METHOD_GET, null, null, null);
-        if (resultMap.get("code") != null) {
-            if (CodeUtil.HTTP_OK != (Integer) resultMap.get("code")) {
+        if (resultMap.get(CodeUtil.HTTP_RESULT_CODE) != null) {
+            if (CodeUtil.HTTP_OK != (Integer) resultMap.get(CodeUtil.HTTP_RESULT_CODE)) {
                 throw new ValueRuntimeException(MessageCode.WX_CONNECT_ERR);
             }
-            codeModel = JSONObject.parseObject(resultMap.get("result").toString(), WxCodeModel.class);
+            codeModel = JSONObject.parseObject(resultMap.get(CodeUtil.HTTP_RESULT_NAME).toString(), WxCodeModel.class);
             if (codeModel != null && codeModel.getErrcode() != null) {  //微信验证失败
                 rest.setMessage(codeModel.getErrmsg());
                 throw new ValueRuntimeException(MessageCode.WX_VALID_ERR);
