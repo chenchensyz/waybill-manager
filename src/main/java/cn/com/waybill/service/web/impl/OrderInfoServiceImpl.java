@@ -11,6 +11,7 @@ import cn.com.waybill.tools.excel.ExcelUtil;
 import cn.com.waybill.tools.excel.OrderExcel;
 import cn.com.waybill.tools.exception.ValueRuntimeException;
 import cn.com.waybill.tools.kdApi.KdUtils;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
@@ -99,7 +100,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("LogisticCode", orderInfo.getOrderNum());
         try {
-            if (StringUtils.isBlank(orderInfo.getShipperCode())) {
+            if (StringUtils.isBlank(orderInfo.getShipperCode())) {  //未保存快递公司
                 String shipper = api.getResultPost(jsonObject.toJSONString(), CodeUtil.KD_CODE_SHIPPER);
                 KdTypeModel typeModel = JSONObject.parseObject(shipper, KdTypeModel.class);
                 if (typeModel.getSuccess()) {
@@ -108,11 +109,22 @@ public class OrderInfoServiceImpl implements OrderInfoService {
                 }
             }
             if (StringUtils.isNotBlank(orderInfo.getShipperCode())) {
-                jsonObject.put("ShipperCode", orderInfo.getShipperCode());
-                //物流信息
-                String result = api.getResultPost(jsonObject.toJSONString(), CodeUtil.KD_CODE_SELECT);
-                JSONObject jsonObject1 = JSONObject.parseObject(result);
-                orderInfo.setTraces(jsonObject1.get("Traces"));
+                //已签收或查询时间不满2小时不做接口查询
+                String result = "";
+                if (orderInfo.getState() == 3
+                        || orderInfo.getSelectTime() != null && orderInfo.getSelectTime().getTime() + 3600000 + 2 <= new Date().getTime()) {  //已签收
+                    orderInfo.setTraces(JSONArray.parseArray(orderInfo.getShipperBody()));
+                } else {
+                    jsonObject.put("ShipperCode", orderInfo.getShipperCode());
+                    //物流信息
+                    result = api.getResultPost(jsonObject.toJSONString(), CodeUtil.KD_CODE_SELECT);
+                    JSONObject jsonObject1 = JSONObject.parseObject(result);
+                    orderInfo.setTraces(jsonObject1.get("Traces"));
+                    orderInfo.setState(jsonObject1.getInteger("State"));
+                    orderInfo.setShipperBody(jsonObject1.get("Traces").toString());
+                    orderInfo.setSelectTime(new Date());
+                    orderInfoMapper.updateOrder(orderInfo);
+                }
             }
         } catch (ValueRuntimeException e) {
             e.printStackTrace();

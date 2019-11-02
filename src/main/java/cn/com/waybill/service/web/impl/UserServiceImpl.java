@@ -7,6 +7,7 @@ import cn.com.waybill.service.web.UserService;
 import cn.com.waybill.tools.CodeUtil;
 import cn.com.waybill.tools.EncryptUtils;
 import cn.com.waybill.tools.MessageCode;
+import cn.com.waybill.tools.SpringUtil;
 import cn.com.waybill.tools.exception.ValueRuntimeException;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -50,6 +52,10 @@ public class UserServiceImpl implements UserService {
             throw new ValueRuntimeException(MessageCode.USERINFO_ERR_PASSWORD); //
         }
 
+        if (userSec.getExpire() != null && userSec.getExpire() < new Date().getTime()) {
+            throw new ValueRuntimeException(MessageCode.USERINFO_EXPIRE); //账户已过期，请联系客服
+        }
+
         if (userSec.getState() == 0) {
             throw new ValueRuntimeException(MessageCode.USERINFO_DISABLE); //用户已被禁用
         }
@@ -65,6 +71,9 @@ public class UserServiceImpl implements UserService {
             map.put("userName", userSec.getUserName());
             map.put("nickName", userSec.getNickName());
             map.put("roleId", userSec.getRoleId() + "");
+            if (userSec.getExpire() != null) {
+                map.put("expire", userSec.getExpire() + "");
+            }
             map.put("timestamp", millis + "");
             String key = RedisTool.getUserToken(user.getUserName(), token);
             jedis.hmset(key, map);
@@ -83,18 +92,34 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void saveUser(Integer roleId, User user) {
-        User userSec = userMapper.getUserByUserName(user.getUserName());
-        if (userSec != null) {
-            throw new ValueRuntimeException(MessageCode.USERINFO_EXIST); //已存在
-        }
         int count;
         if (user.getId() == null) {
+            User userSec = userMapper.getUserByUserName(user.getUserName());
+            if (userSec != null) {
+                throw new ValueRuntimeException(MessageCode.USERINFO_EXIST); //已存在
+            }
             user.setState(1);
             user.setRoleId(roleId);
             user.setPassword(RedisTool.encryptPwd(user.getUserName(), CodeUtil.DEFAULT_PASSWORD));
             count = userMapper.insertUser(user);
         } else {
             count = userMapper.updateUser(user);
+            if (user.getExpire() != null) {
+                JedisPool jedisPool = SpringUtil.getBean(JedisPool.class);
+                Jedis jedis = jedisPool.getResource();
+                jedis.select(CodeUtil.REDIS_DBINDEX);
+                try {
+                    String token = CodeUtil.REDIS_PREFIX + user.getUserName() + ":" + "*";
+                    Set<String> keys = jedis.keys(token);
+                    for (String key : keys) {
+                        jedis.del(key);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    jedis.close();
+                }
+            }
         }
         if (count == 0) {
             throw new ValueRuntimeException(MessageCode.USERINFO_ERR_SAVE);

@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.Map;
 
 public class WebInterceptor implements HandlerInterceptor {
@@ -32,6 +33,7 @@ public class WebInterceptor implements HandlerInterceptor {
         messageMap.put(MessageCode.AUTH_HEADER_TOKEN_FILED, "token验证失败");
         messageMap.put(MessageCode.AUTH_HEADER_TOKEN_TIMEOUT, "token已失效");
         messageMap.put(MessageCode.AUTH_HEADER_USER_FILED, "用户验证失败");
+        messageMap.put(MessageCode.USERINFO_EXPIRE, "账户已过期，请联系客服");
     }
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MyInteceptor.class);
@@ -76,11 +78,16 @@ public class WebInterceptor implements HandlerInterceptor {
         Jedis jedis = jedisPool.getResource();
         jedis.select(CodeUtil.REDIS_DBINDEX);
         try {
-            Map<String, String> tokenMap = jedis.hgetAll(RedisTool.getUserToken(userName,token));
+            Map<String, String> tokenMap = jedis.hgetAll(RedisTool.getUserToken(userName, token));
             if (tokenMap.isEmpty()) {
                 writeJsonResult(response, 401, MessageCode.AUTH_HEADER_TOKEN_TIMEOUT);
                 return false;
             }
+            if (tokenMap.get("expire") != null && Long.valueOf(tokenMap.get("expire")) < new Date().getTime()) {
+                writeJsonResult(response, 401, MessageCode.USERINFO_EXPIRE); //账户已过期
+                return false;
+            }
+
             if (!userName.equals(tokenMap.get("userName"))) {
                 writeJsonResult(response, 401, MessageCode.AUTH_HEADER_USER_FILED);
                 return false;

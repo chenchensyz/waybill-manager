@@ -10,10 +10,10 @@ Configuration:
     - name: log.level.lee
       value: debug
     - name: log.path
-#      value: D://log//logs
-      value: D:\lingtalk-sdk/logs
+      value: /software/logs
+#      value: D:\lingtalk-sdk/logs
     - name: project.name
-      value: pmm-lingtalk
+      value: waybill-manager
 
   Appenders:
     Console: #输出到控制台

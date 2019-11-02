@@ -1,12 +1,12 @@
 package cn.com.waybill.model;
 
 import cn.com.waybill.model.common.BaseEntity;
+import com.alibaba.fastjson.annotation.JSONField;
 
+import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
-public class OrderInfo extends BaseEntity {
+public class OrderInfo extends BaseEntity implements Serializable {
     private Integer id;
 
     private String userName;
@@ -23,6 +23,8 @@ public class OrderInfo extends BaseEntity {
 
     private Integer state;
 
+    private Date selectTime;
+
     private Date createTime;
 
     private Date updateTime;
@@ -32,6 +34,10 @@ public class OrderInfo extends BaseEntity {
     private Long updateLongTime;
 
     private String shipperCode;
+
+    private String shipperName;
+
+    private String shipperBody;
 
     private Object Traces;
 
@@ -145,5 +151,30 @@ public class OrderInfo extends BaseEntity {
 
     public void setTraces(Object traces) {
         Traces = traces;
+    }
+
+    public String getShipperName() {
+        return shipperName;
+    }
+
+    public void setShipperName(String shipperName) {
+        this.shipperName = shipperName;
+    }
+
+    @JSONField(serialize = false)
+    public String getShipperBody() {
+        return shipperBody;
+    }
+
+    public void setShipperBody(String shipperBody) {
+        this.shipperBody = shipperBody;
+    }
+
+    public Date getSelectTime() {
+        return selectTime;
+    }
+
+    public void setSelectTime(Date selectTime) {
+        this.selectTime = selectTime;
     }
 }

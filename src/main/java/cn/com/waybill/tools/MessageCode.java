@@ -64,7 +64,7 @@ public class MessageCode {
     public static final int USERINFO_PARAM_NULL = 20109; //请填写完整登录信息
     public static final int USERINFO_ERR_OLDPASS = 20110; //原密码错误
     public static final int USERINFO_ERR_RESETPASS = 20111; //修改密码失败
-    public static final int USERINFO_DETAIL_ERR_ADD = 20112; //保存用户登陆信息失败
+    public static final int USERINFO_EXPIRE = 20112; //账户已过期，请联系客服
     public static final int USERINFO_ERR_QUERY_PAGE = 20113; //请填写完整的分页信息
 
     //角色

@@ -10,23 +10,27 @@
     <result column="detail" jdbcType="VARCHAR" property="detail" />
     <result column="creator" jdbcType="INTEGER" property="creator" />
     <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="select_time" jdbcType="TIMESTAMP" property="selectTime" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="shipper_code"  property="shipperCode" />
+    <result column="shipper_name"  property="shipperName" />
+    <result column="shipper_body"  property="shipperBody" />
   </resultMap>
   <sql id="Base_Column_List">
     id, user_name, order_num, customer, telephone, detail, creator, state, shipper_code, create_time,
-    update_time
+    update_time, select_time, shipper_name, shipper_body
   </sql>
   <select id="getOrderById" parameterType="int" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from order_info
+    select oi.*, si.shipper_name
+    from order_info oi left join shiper si on oi.shipper_code = si.shipper_code
     where id = #{id,jdbcType=INTEGER}
   </select>
+
   <delete id="deleteOrderById" parameterType="java.lang.Integer">
     delete from order_info  where id = #{id}
   </delete>
+
   <insert id="insertOrder" parameterType="cn.com.waybill.model.OrderInfo">
     insert into order_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -109,7 +113,15 @@
       <if test="shipperCode != null">
         shipper_code = #{shipperCode,jdbcType=INTEGER},
       </if>
-        update_time = sysdate(),
+      <if test="shipperBody != null">
+        shipper_body = #{shipperBody,jdbcType=INTEGER},
+      </if>
+      <if test="selectTime != null">
+        select_time = #{selectTime},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -136,8 +148,9 @@
          and creator = #{creator,jdbcType=INTEGER}
       </if>
       <if test="state != null">
-         and state = #{state,jdbcType=INTEGER}
+         and state = #{state}
       </if>
+      and state > 0
     </where>
   </sql>
   <select id="getOrderList" parameterType="cn.com.waybill.model.OrderInfo" resultMap="BaseResultMap">

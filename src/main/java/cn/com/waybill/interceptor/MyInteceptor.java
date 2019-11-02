@@ -22,14 +22,14 @@ public class MyInteceptor implements WebMvcConfigurer {
         registry.addInterceptor(new WebInterceptor())
                 .addPathPatterns("/**").excludePathPatterns(webExcludeArr);
         String apiExcludePath = env.getProperty("interceptor.apiExcludePath");
-//        registry.addInterceptor(new ApiInterceptor())
-//                .addPathPatterns("/api/**").excludePathPatterns(apiExcludePath);
+        registry.addInterceptor(new ApiInterceptor())
+                .addPathPatterns("/api/**").excludePathPatterns(apiExcludePath);
     }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         //将所有/static/** 访问都映射到classpath:/static/ 目录下
-        String fileRootPath = env.getProperty(CodeUtil.FILE_ROOT_PATH);
+        String fileRootPath = env.getProperty(CodeUtil.FILE_MODEL_PATH);
         System.out.println(fileRootPath);
         registry.addResourceHandler("/file/**").addResourceLocations("file:" + fileRootPath);
     }

@@ -1,25 +1,14 @@
 package cn.com.waybill.model.common;
 
-import cn.com.waybill.tools.*;
-import cn.com.waybill.tools.exception.ValueRuntimeException;
-import com.google.common.collect.Maps;
-
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.security.MessageDigest;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class KdTypeModel {
 
-   private String EBusinessID;
-   private String LogisticCode;
-   private Boolean Success;
-   private Integer Code;
-   private List<KdCodeModel> Shippers;
+    private String EBusinessID;
+    private String LogisticCode;
+    private Boolean Success;
+    private Integer Code;
+    private List<KdCodeModel> Shippers;
 
     public String getEBusinessID() {
         return EBusinessID;

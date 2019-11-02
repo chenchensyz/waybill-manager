@@ -52,7 +52,7 @@ public class CodeUtil {
     public static final int ROLE_BUYER = 3;  //后台--买手
 
     //文件下载地址
-    public static final String FILE_ROOT_PATH = "file_root_path";
+    public static final String FILE_MODEL_PATH = "file_model_path";
 
     //微信
     public static final String WX_PREFIX = "wx.";

@@ -85,7 +85,8 @@ public class UserController {
         String token = request.getHeader("token");
         try {
             User localUser = redisTool.getLocalUser(RedisTool.getUserToken(userName, token));
-            if (localUser.getRoleId() != CodeUtil.ROLE_ADMIN) {
+            if (!localUser.getUserName().equals(user.getUserName())
+                    && localUser.getRoleId() > CodeUtil.ROLE_USER) {
                 throw new ValueRuntimeException(MessageCode.AUTH_HEADER_VALID_NULL); //用户权限不足
             }
             userService.saveUser(CodeUtil.ROLE_USER, user);

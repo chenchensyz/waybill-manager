@@ -44,7 +44,6 @@ public class OrderApiController {
             if (StringUtils.isBlank(orderInfo.getTelephone())) {
                 throw new ValueRuntimeException(MessageCode.ORDER_SEC_PHONE);
             }
-            orderInfo.setState(1);
             PageHelper.startPage(orderInfo.getPageNum(), orderInfo.getPageSize());
             List<OrderInfo> orderInfos = orderInfoService.getOrderList(orderInfo);
             PageInfo<OrderInfo> orderInfoPage = new PageInfo<>(orderInfos);
