@@ -16,10 +16,11 @@
     <result column="shipper_code"  property="shipperCode" />
     <result column="shipper_name"  property="shipperName" />
     <result column="shipper_body"  property="shipperBody" />
+    <result column="website"  property="website" />
   </resultMap>
   <sql id="Base_Column_List">
     id, user_name, order_num, customer, telephone, detail, creator, state, shipper_code, create_time,
-    update_time, select_time, shipper_name, shipper_body
+    update_time, select_time, shipper_name, shipper_body,website
   </sql>
   <select id="getOrderById" parameterType="int" resultMap="BaseResultMap">
     select oi.*, si.shipper_name
@@ -58,6 +59,9 @@
       <if test="shipperCode != null">
         shipper_code,
       </if>
+      <if test="website != null">
+        website,
+      </if>
         state, create_time,
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -84,6 +88,9 @@
       </if>
       <if test="shipperCode != null">
         #{shipperCode},
+      </if>
+       <if test="website != null">
+        #{website},
       </if>
         1, sysdate()
     </trim>
@@ -116,11 +123,14 @@
       <if test="shipperBody != null">
         shipper_body = #{shipperBody,jdbcType=INTEGER},
       </if>
+      <if test="website != null">
+        website = #{website},
+      </if>
       <if test="selectTime != null">
         select_time = #{selectTime},
       </if>
       <if test="updateTime != null">
-        update_time = #{updateTime},
+        update_time = sysdate(),
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -160,11 +170,11 @@
   </select>
 
     <insert id="insertOrderMore" parameterType="list">
-      insert into order_info(user_name, order_num, customer, telephone, detail, creator, state, create_time)
+      insert into order_info(user_name, order_num, customer, telephone, detail, creator, website, state, create_time)
       VALUES
       <foreach collection="list" item="item" index="index" separator="," >
         (#{item.userName},#{item.orderNum},#{item.customer},#{item.telephone},#{item.detail},
-        #{item.creator},1,sysdate())
+        #{item.creator}, #{item.website}, 1,sysdate())
       </foreach>
     </insert>
 

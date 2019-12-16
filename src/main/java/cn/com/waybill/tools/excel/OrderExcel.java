@@ -20,6 +20,9 @@ public class OrderExcel extends BaseRowModel {
     @ExcelProperty(value = "商品明细", index = 4)
     private String detail;
 
+    @ExcelProperty(value = "快递网址", index = 5)
+    private String website;
+
     public String getUserName() {
         return userName;
     }
@@ -58,5 +61,13 @@ public class OrderExcel extends BaseRowModel {
 
     public void setDetail(String detail) {
         this.detail = detail;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
     }
 }

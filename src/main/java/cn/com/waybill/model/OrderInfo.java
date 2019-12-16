@@ -1,6 +1,7 @@
 package cn.com.waybill.model;
 
 import cn.com.waybill.model.common.BaseEntity;
+import cn.com.waybill.tools.DateUtil;
 import com.alibaba.fastjson.annotation.JSONField;
 
 import java.io.Serializable;
@@ -29,7 +30,7 @@ public class OrderInfo extends BaseEntity implements Serializable {
 
     private Date updateTime;
 
-    private Long createLongTime;
+    private String createTimeStr;
 
     private Long updateLongTime;
 
@@ -40,6 +41,8 @@ public class OrderInfo extends BaseEntity implements Serializable {
     private String shipperBody;
 
     private Object Traces;
+
+    private String website;//网址
 
     public Integer getId() {
         return id;
@@ -121,12 +124,12 @@ public class OrderInfo extends BaseEntity implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public Long getCreateLongTime() {
-        return createTime == null ? null : createTime.getTime();
+    public String getCreateTimeStr() {
+        return createTime == null ? "" : DateUtil.format(createTime, DateUtil.YMD_DASH_WITH_TIME);
     }
 
-    public void setCreateLongTime(Long createLongTime) {
-        this.createLongTime = createLongTime;
+    public void setCreateTimeStr(String createTimeStr) {
+        this.createTimeStr = createTimeStr;
     }
 
     public Long getUpdateLongTime() {
@@ -176,5 +179,13 @@ public class OrderInfo extends BaseEntity implements Serializable {
 
     public void setSelectTime(Date selectTime) {
         this.selectTime = selectTime;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
     }
 }

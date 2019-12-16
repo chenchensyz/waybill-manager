@@ -44,10 +44,8 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     public void saveOrder(OrderInfo orderInfo) {
         int count = 0;
         if (orderInfo.getId() == null) {
-            orderInfo.setCreateTime(new Date());
             count = orderInfoMapper.insertOrder(orderInfo);
         } else {
-            orderInfo.setUpdateTime(new Date());
             count = orderInfoMapper.updateOrder(orderInfo);
         }
         if (count == 0) {
@@ -81,6 +79,7 @@ public class OrderInfoServiceImpl implements OrderInfoService {
             orderInfo.setCustomer(orderExcel.getCustomer());
             orderInfo.setTelephone(orderExcel.getTelephone());
             orderInfo.setDetail(orderExcel.getDetail());
+            orderInfo.setWebsite(orderExcel.getWebsite());
             orderInfo.setCreator(localUser.getId());
             orderInfos.add(orderInfo);
         }
