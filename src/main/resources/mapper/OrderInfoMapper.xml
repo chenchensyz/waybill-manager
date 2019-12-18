@@ -184,4 +184,9 @@
         #{id}
       </foreach>
     </update>
+
+     <!--终端获取 需传用户名手机号-->
+     <select id="getApiOrderList" parameterType="cn.com.waybill.model.OrderInfo" resultMap="BaseResultMap">
+        select * from order_info where user_name = #{userName} or customer = #{userName} and telephone = #{telephone} order by id desc
+    </select>
 </mapper>

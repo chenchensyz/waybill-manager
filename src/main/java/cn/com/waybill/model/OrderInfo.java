@@ -4,18 +4,21 @@ import cn.com.waybill.model.common.BaseEntity;
 import cn.com.waybill.tools.DateUtil;
 import com.alibaba.fastjson.annotation.JSONField;
 
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.util.Date;
 
 public class OrderInfo extends BaseEntity implements Serializable {
     private Integer id;
 
+    @NotEmpty(message = "用户不能为空")
     private String userName;
 
     private String orderNum;
 
     private String customer;
 
+    @NotEmpty(message = "请填写手机号")
     private String telephone;
 
     private String detail;

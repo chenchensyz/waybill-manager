@@ -18,4 +18,6 @@ public interface OrderInfoService {
 
     OrderInfo getOrderInfo(Integer id);
 
+    List<OrderInfo> getApiOrderList(OrderInfo orderInfo);
+
 }

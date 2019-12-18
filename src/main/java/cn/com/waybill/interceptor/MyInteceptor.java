@@ -19,11 +19,9 @@ public class MyInteceptor implements WebMvcConfigurer {
         //web后台接口拦截器
         String webExcludePath = env.getProperty("interceptor.webExcludePath");
         String[] webExcludeArr = webExcludePath.split(",");
-        registry.addInterceptor(new WebInterceptor())
-                .addPathPatterns("/**").excludePathPatterns(webExcludeArr);
+        registry.addInterceptor(new WebInterceptor()).addPathPatterns("/**").excludePathPatterns(webExcludeArr);
         String apiExcludePath = env.getProperty("interceptor.apiExcludePath");
-        registry.addInterceptor(new ApiInterceptor())
-                .addPathPatterns("/api/**").excludePathPatterns(apiExcludePath);
+        registry.addInterceptor(new ApiInterceptor()).addPathPatterns("/api/**").excludePathPatterns(apiExcludePath);
     }
 
     @Override

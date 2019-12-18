@@ -132,4 +132,9 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         }
         return orderInfo;
     }
+
+    @Override
+    public List<OrderInfo> getApiOrderList(OrderInfo orderInfo) {
+        return orderInfoMapper.getApiOrderList(orderInfo);
+    }
 }

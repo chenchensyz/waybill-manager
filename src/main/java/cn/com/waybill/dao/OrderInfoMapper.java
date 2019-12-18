@@ -21,4 +21,7 @@ public interface OrderInfoMapper {
     int insertOrderMore(List<OrderInfo> orderInfos);
 
     OrderInfo getOrderById(Integer id);
+
+    List<OrderInfo> getApiOrderList(OrderInfo orderInfo);
+
 }

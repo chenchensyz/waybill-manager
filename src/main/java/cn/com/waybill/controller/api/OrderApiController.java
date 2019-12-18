@@ -10,7 +10,6 @@ import cn.com.waybill.tools.exception.ValueRuntimeException;
 import cn.com.waybill.tools.filter.FilterParamUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -37,15 +37,18 @@ public class OrderApiController {
 
     //订单列表
     @RequestMapping(value = "list", method = RequestMethod.POST)
-    public RestResponse getOrderList(OrderInfo orderInfo) {
+    public RestResponse getOrderList(@Valid OrderInfo orderInfo) {
         RestResponse rest = new RestResponse();
         int msgCode = MessageCode.BASE_SUCC_CODE;
         try {
-            if (StringUtils.isBlank(orderInfo.getTelephone())) {
-                throw new ValueRuntimeException(MessageCode.ORDER_SEC_PHONE);
-            }
+//            if (StringUtils.isBlank(orderInfo.getTelephone())) {
+//                throw new ValueRuntimeException(MessageCode.ORDER_SEC_PHONE);
+//            }
+//            if (StringUtils.isBlank(orderInfo.getUserName())) {
+//                throw new ValueRuntimeException(MessageCode.APPINFO_SERVER_ERR_USERS_NULL);
+//            }
             PageHelper.startPage(orderInfo.getPageNum(), orderInfo.getPageSize());
-            List<OrderInfo> orderInfos = orderInfoService.getOrderList(orderInfo);
+            List<OrderInfo> orderInfos = orderInfoService.getApiOrderList(orderInfo);
             PageInfo<OrderInfo> orderInfoPage = new PageInfo<>(orderInfos);
             Object orderInfosFilter = FilterParamUtil.filterParam(orderInfos, FilterParamUtil.API_ORDER_LIST);
             rest.setData(orderInfosFilter).setTotal(orderInfoPage.getTotal()).setPage(orderInfoPage.getLastPage());
